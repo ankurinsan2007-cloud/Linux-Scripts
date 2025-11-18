@@ -1,0 +1,32 @@
+#!/bin/bash
+# ---------------------------------------------------------
+# Script Name: monitor.sh
+# Purpose    : Logs CPU and memory usage to a file at regular intervals.
+# Author     : Ankur Arora
+# Date       : 18-11-2025
+# ---------------------------------------------------------
+
+# -------- Variables --------
+LOG_FILE="$HOME/system_usage.log"   # File where logs will be stored
+INTERVAL=5                          # Time interval in seconds
+
+echo "CPU/Memory Monitoring Started..."
+echo "Logs will be saved in: $LOG_FILE"
+echo "Press CTRL+C to stop."
+
+# -------- Steps --------
+while true; do
+    TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
+    
+    # Get CPU usage (%)
+    CPU_USAGE=$(top -bn1 | grep "Cpu(s)" | awk '{print $2+$4}')
+    
+    # Get Memory usage (%)
+    MEM_USAGE=$(free | awk '/Mem/ {printf("%.2f"), $3/$2 * 100}')
+
+    # Write to log file
+    echo "$TIMESTAMP | CPU: $CPU_USAGE% | Memory: $MEM_USAGE%" >> "$LOG_FILE"
+
+    # Wait before next entry
+    sleep $INTERVAL
+done

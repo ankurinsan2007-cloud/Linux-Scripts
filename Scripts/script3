@@ -1,0 +1,39 @@
+#!/bin/bash
+# ---------------------------------------------------------
+# Script Name: download.sh
+# Purpose    : Downloads a file using wget or curl and stores it in a predefined directory.
+# Author     : Ankur Arora
+# Date       : 18-11-2025
+# ---------------------------------------------------------
+
+# -------- Variables --------
+DOWNLOAD_URL="$1"                   # The file link provided by the user
+SAVE_DIR="$HOME/downloaded_files"   # Directory where file will be saved
+
+# -------- Steps --------
+
+# Check if URL is provided
+if [ -z "$DOWNLOAD_URL" ]; then
+    echo "Usage: ./download.sh <file_url>"
+    exit 1
+fi
+
+# Create destination directory if not exists
+mkdir -p "$SAVE_DIR"
+
+# Download file using wget or curl
+FILE_NAME=$(basename "$DOWNLOAD_URL")
+
+echo "Downloading file..."
+
+if command -v wget &> /dev/null; then
+    wget -q "$DOWNLOAD_URL" -O "$SAVE_DIR/$FILE_NAME"
+elif command -v curl &> /dev/null; then
+    curl -s "$DOWNLOAD_URL" -o "$SAVE_DIR/$FILE_NAME"
+else
+    echo "Error: Neither wget nor curl is installed."
+    exit 1
+fi
+
+echo "File downloaded successfully!"
+echo "Stored at: $SAVE_DIR/$FILE_NAME"
